@@ -55,15 +55,10 @@ public class PathFinding : MonoBehaviour
         path.Add(node);
         while(node.parent != null)
         {
+            Debug.Log(node.worldPos);
             path.Add(node.parent);
             node = node.parent;
             //Debug.Log(hex.totalMoveDifficulty);
-        }
-        foreach (Node hexagon in path)
-        {
-            node.gCost = int.MaxValue;
-            node.hCost = int.MaxValue;
-            hexagon.parent = null;
         }
     }
 
@@ -93,7 +88,7 @@ public class PathFinding : MonoBehaviour
 
                 float newMovementCostToNeighbor = currentNode.gCost + GetDistance(currentNode, neighbor);
 
-                if (newMovementCostToNeighbor < neighbor.gCost || openList.Contains(neighbor))
+                if (newMovementCostToNeighbor < neighbor.gCost || !openList.Contains(neighbor))
                 {
                     neighbor.gCost = newMovementCostToNeighbor;
                     neighbor.hCost = GetDistance(neighbor, endPoint);
@@ -126,9 +121,19 @@ public class PathFinding : MonoBehaviour
     }
 
     public static Node GetStartNode()
-    { return instance.startPoint; }
+    { 
+        if(instance.startPoint == null)
+            return null;
+        else
+        return instance.startPoint; 
+    }
     public static Node GetEndPoint()
-    { return instance.endPoint; }
+    {
+        if (instance.endPoint == null)
+            return null;
+        else
+            return instance.endPoint; 
+    }
 
     float GetDistance(Node a, Node b)
     {

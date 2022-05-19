@@ -20,7 +20,8 @@ public class DrawPath : MonoBehaviour
             lineRenderer.SetVertexCount(PathFinding.path.Count);
             for(int i = 0; i < PathFinding.path.Count; i++)
             {
-                lineRenderer.SetPosition(i, PathFinding.path[i].worldPos);
+                lineRenderer.enabled = showLine;
+                lineRenderer.SetPosition(i, PathFinding.path[i].worldPos- Vector3.up*2);
             }
         }
 

@@ -21,8 +21,6 @@ public class Hexagon : MonoBehaviour
     void Awake()
     {
         node = new Node(true, transform.position, this);
-        node.hCost = float.MaxValue;
-        node.gCost = float.MaxValue;
         moveDifficulty = 1;
     }
 
@@ -111,6 +109,21 @@ public class Hexagon : MonoBehaviour
                 return Instantiate(Tile, transform.position + new Vector3(-1.732051f, 1, 0), Quaternion.identity);
             default:
                 return null;
+        }
+    }
+
+    public void myMouseDown()
+    {
+        if(PathFinding.GetStartNode() == null)
+        {
+            Debug.Log("Start Node Set to:" + node );
+            PathFinding.SetStart(node);
+        }
+        else
+        {
+            Debug.Log("End Node Set to " + node);
+            PathFinding.SetEnd(node);
+            tileInner.GetComponentInChildren<SpriteRenderer>().color = Color.black;
         }
     }
 
