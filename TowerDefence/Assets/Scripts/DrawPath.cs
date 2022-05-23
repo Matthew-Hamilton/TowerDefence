@@ -15,13 +15,14 @@ public class DrawPath : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(PathFinding.path.Count > 0 && showLine)
+        if(PathFinding.instance.path.Count > 0 && showLine)
         {
-            lineRenderer.SetVertexCount(PathFinding.path.Count);
-            for(int i = 0; i < PathFinding.path.Count; i++)
+            List<Node> path = PathFinding.instance.path;
+            lineRenderer.SetVertexCount(path.Count);
+            for(int i = 0; i < path.Count; i++)
             {
                 lineRenderer.enabled = showLine;
-                lineRenderer.SetPosition(i, PathFinding.path[i].worldPos- Vector3.up*2);
+                lineRenderer.SetPosition(i, path[i].worldPos- Vector3.up*2);
             }
         }
 

@@ -17,9 +17,10 @@ public class TileGeneration : MonoBehaviour
     [SerializeField] int numSmoothOperations;
     [SerializeField] int landRatio = 50;
 
-    Material Mountain;
-    Material Ground;
-    Material Water;
+    public Material Mountain;
+    public Material Ground;
+    public Material Water;
+    public Material Turret;
 
     void Start()
     {
@@ -31,6 +32,7 @@ public class TileGeneration : MonoBehaviour
         Mountain = Resources.Load<Material>("Mountain");
         Ground = Resources.Load<Material>("Ground");
         Water = Resources.Load<Material>("Water");
+        Turret = Resources.Load<Material>("Turret");
 
         HexConstruction = new List<List<Hexagon>>();
     }
@@ -55,7 +57,7 @@ public class TileGeneration : MonoBehaviour
         ClearMap();
         int variableSize = size;
         int hexHeight = 2 * size-1;
-        Vector2 startPos = new Vector2(-hexHeight*0.5f * 1.732051f + 0.75f, -size*0.5f * 1.732051f + 0.66f);
+        Vector2 startPos = new Vector2(-hexHeight*0.5f * 1.732051f + 0.75f + 0.1160256f, -size + 1);
         bool backtrack = false;
         for(int i=0; i< hexHeight; i++)
         {
@@ -65,8 +67,11 @@ public class TileGeneration : MonoBehaviour
 
             for (int j = 0; j < variableSize; j++)
             {
-                if(j < variableSize)
-                    level.Add(level[j].GenerateHex(0).GetComponent<Hexagon>());
+                if (j < variableSize - 1)
+                {
+                    Hexagon tempHex = level[j].GenerateHex(0).GetComponent<Hexagon>();
+                    level.Add(tempHex);
+                }
                 if (j != 0)
                     level[j].SetConnection(3, level[j - 1]);
 
@@ -157,6 +162,8 @@ public class TileGeneration : MonoBehaviour
         {
             foreach(Hexagon hex in hexList)
             {
+                if (hex.tileType == Hexagon.TileType.Tower)
+                    continue;
                 int numConnected = 0;
                 foreach(Node connectedHex in hex.node.connections)
                 {
@@ -165,11 +172,11 @@ public class TileGeneration : MonoBehaviour
                 }
                 if(numConnected < 6)
                 {
-                    hex.tileType = "Mountain";
+                    hex.tileType = Hexagon.TileType.Mountain;
                 }
                 else
                 {
-                    hex.tileType = (MyRandom.Next(0, 100) < landRatio) ? "Water" : "Ground";
+                    hex.tileType = (MyRandom.Next(0, 100) < landRatio) ? Hexagon.TileType.Water : Hexagon.TileType.Ground;
                 }
             }
         }
@@ -185,24 +192,26 @@ public class TileGeneration : MonoBehaviour
                 {
                     int numGround = 0;
                     int numWater = 0;
-                    if (hex.tileType == "Mountain")
+                    if (hex.tileType == Hexagon.TileType.Tower)
+                        continue;
+                    if (hex.tileType == Hexagon.TileType.Mountain)
                         continue;
                     foreach (Node connectedHex in hex.node.connections)
                     {
                         if (connectedHex == null)
                             continue;
-                        if (connectedHex.attachedHex.tileType == "Ground")
+                        if (connectedHex.attachedHex.tileType == Hexagon.TileType.Ground)
                             numGround++;
-                        if (connectedHex.attachedHex.tileType == "Water")
+                        if (connectedHex.attachedHex.tileType == Hexagon.TileType.Water)
                             numWater++;
                     }
                     if (numWater > numGround + 1)
                     {
-                        hex.tileType = "Water";
+                        hex.tileType = Hexagon.TileType.Water;
                     }
                     if (numWater <= 2)
                     {
-                        hex.tileType = "Ground";
+                        hex.tileType = Hexagon.TileType.Ground;
                     }
                 }
             }
@@ -215,21 +224,7 @@ public class TileGeneration : MonoBehaviour
         {
             foreach (Hexagon hex in hexList)
             {
-                switch(hex.tileType)
-                {
-                    case "Mountain":
-                        SetMat(hex, Mountain);
-                        break;
-                    case "Ground":
-                        SetMat(hex, Ground);
-                        break;
-                    case "Water":
-                        SetMat(hex, Water);
-                        break;
-                    default:
-                        break;
-
-                }
+                hex.UpdateTile();
             }
         }
     }

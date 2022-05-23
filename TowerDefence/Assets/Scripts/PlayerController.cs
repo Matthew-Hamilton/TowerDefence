@@ -36,8 +36,8 @@ public class PlayerController : MonoBehaviour
 
     void MoveCamera()
     {
-        moveDirection.x = Input.GetAxis("Horizontal");
-        moveDirection.y = Input.GetAxis("Vertical");
+        moveDirection.x = Input.GetAxisRaw("Horizontal");
+        moveDirection.y = Input.GetAxisRaw("Vertical");
         cam.transform.position = new Vector3(Mathf.Clamp(cam.transform.position.x + moveDirection.x * moveSpeed * Time.deltaTime, -boundry, boundry),
         Mathf.Clamp(cam.transform.position.y + moveDirection.y * moveSpeed * Time.deltaTime, -boundry, boundry), 0);
     }

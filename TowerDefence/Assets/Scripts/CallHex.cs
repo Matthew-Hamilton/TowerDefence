@@ -22,5 +22,13 @@ public class CallHex : MonoBehaviour
         hex.myMouseDown();
     }
 
+    private void OnMouseEnter()
+    {
+        if(Input.GetMouseButton(0))
+        {
+            hex.myMouseDown();
+        }
+    }
+
 
 }

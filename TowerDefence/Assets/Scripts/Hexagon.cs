@@ -11,12 +11,14 @@ public static class vector3Helper
 }
 public class Hexagon : MonoBehaviour
 {
-    public Node node;
+    [SerializeField] public Node node;
     public GameObject tileInner;
     public bool active = false;
     public GameObject Tile;
     public int moveDifficulty = 1;
-    public string tileType = "";
+    public TileType tileType;
+
+    public bool isTower =false;
 
     void Awake()
     {
@@ -114,17 +116,59 @@ public class Hexagon : MonoBehaviour
 
     public void myMouseDown()
     {
-        if(PathFinding.GetStartNode() == null)
+        //tileType++;
+        //UpdateTile();
+        PathFinding.instance.startPoint = node;
+    }
+
+    public void UpdateTile()
+    {
+        if ((transform.position - Vector3.zero).magnitude < 0.01)
         {
-            Debug.Log("Start Node Set to:" + node );
-            PathFinding.SetStart(node);
+            isTower = true;
+            gameObject.name = "Tower";
+            tileType = TileType.Tower;
+            PathFinding.instance.endPoint = node; 
         }
-        else
+        SpriteRenderer spriteRenderer = tileInner.GetComponentInChildren<SpriteRenderer>();
+        switch(tileType)
         {
-            Debug.Log("End Node Set to " + node);
-            PathFinding.SetEnd(node);
-            tileInner.GetComponentInChildren<SpriteRenderer>().color = Color.black;
+            case TileType.Ground:
+                spriteRenderer.material = TileGeneration.instance.Ground;
+                node.walkable = true;
+                break;
+            case TileType.Mountain:
+                spriteRenderer.material = TileGeneration.instance.Mountain;
+                node.walkable = false;
+                break;
+            case TileType.Water:
+                spriteRenderer.material = TileGeneration.instance.Water;
+                node.walkable = false;
+                break;
+            case TileType.Tower:
+                spriteRenderer.sprite = Resources.Load<Sprite>("TowerSprite");
+                node.walkable = true;
+                break ;
+            case TileType.Turret:
+                spriteRenderer.sprite = Resources.Load<Sprite>("TurretSprite");
+                node.walkable = false;
+                break;
+            default:
+                tileType = TileType.Ground;
+                spriteRenderer.material = TileGeneration.instance.Ground;
+                node.walkable = true;
+                break;
+
         }
+    }
+
+    public enum TileType
+    {
+        Ground =0,
+        Mountain = 1,
+        Water = 2,
+        Tower = 3,
+        Turret = 4
     }
 
 }

@@ -8,7 +8,7 @@ public class PathFinding : MonoBehaviour
 
     public Node startPoint;
     public Node endPoint;
-    public static List<Node> path;
+    public List<Node> path;
     
     Material PathMat;
     Material PathEndMat;
@@ -83,6 +83,8 @@ public class PathFinding : MonoBehaviour
 
             foreach(Node neighbor in currentNode.connections)
             {
+                if (neighbor == null)
+                    continue;
                 if (!neighbor.walkable || closedList.Contains(neighbor))
                     continue;
 
