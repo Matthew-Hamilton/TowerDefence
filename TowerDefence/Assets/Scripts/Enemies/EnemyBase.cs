@@ -18,6 +18,7 @@ public class EnemyBase : MonoBehaviour
 
     [SerializeField]protected int currentPathIndex = 0;
     EnemyController enemyController;
+    Node targetNode;
 
 
     private void Start()
@@ -48,7 +49,8 @@ public class EnemyBase : MonoBehaviour
     public virtual async Task Move()
     {
         canMove = false;
-        await transform.DOJump(PathFinding.instance.path[currentPathIndex].worldPos + new Vector3(0,-2,1), 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
+        targetNode = PathFinding.instance.path[currentPathIndex];
+        await transform.DOJump(targetNode.worldPos + new Vector3(0,-2,1), 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
     }
 
     public void ResetPath()
@@ -58,7 +60,12 @@ public class EnemyBase : MonoBehaviour
 
     public void UpdatePath()
     {
-        currentPathIndex = Mathf.Min(currentPathIndex, PathFinding.instance.path.Count-1);
+        if (PathFinding.instance.path.Contains(targetNode))
+        {
+            currentPathIndex = PathFinding.instance.path.FindIndex(i => i == targetNode );
+            return;
+        }
+        currentPathIndex = Mathf.Max(currentPathIndex, PathFinding.instance.path.Count-1);
     }
 
     public virtual void Die()

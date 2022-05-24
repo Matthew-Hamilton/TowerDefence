@@ -62,7 +62,7 @@ public class PathFinding : MonoBehaviour
         }
     }
 
-    public void FindPath()
+    public bool FindPath()
     {
         Heap<Node> openList = new Heap<Node>(TileGeneration.GetNumHexes());
         HashSet<Node> closedList = new HashSet<Node>();
@@ -78,7 +78,7 @@ public class PathFinding : MonoBehaviour
             if (currentNode == endPoint)
             {
                 TracePath(currentNode);
-                return;
+                return true;
             }
 
             foreach(Node neighbor in currentNode.connections)
@@ -107,8 +107,9 @@ public class PathFinding : MonoBehaviour
         if (!foundDest)
         {
             Debug.Log("Failed to find destination");
-            return;
+            return false;
         }
+        return false;
         
     }
 

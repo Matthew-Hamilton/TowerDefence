@@ -116,9 +116,18 @@ public class Hexagon : MonoBehaviour
 
     public void myMouseDown()
     {
-        //tileType++;
-        //UpdateTile();
-        PathFinding.instance.startPoint = node;
+        if (PlayerController.instance.selectedTile)
+        {
+            TileType tempTileType = tileType;
+            tileType = PlayerController.instance.tileType;
+            UpdateTile();
+            if (!PathFinding.instance.FindPath())
+            {
+                tileType = tempTileType;
+                UpdateTile();
+            }
+
+        }
     }
 
     public void UpdateTile()
