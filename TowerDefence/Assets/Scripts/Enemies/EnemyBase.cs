@@ -6,17 +6,17 @@ using DG.Tweening;
 
 public class EnemyBase : MonoBehaviour
 {
+    
+    protected float health;
+    protected float shield;
+    protected float speed = 5;
+    protected float damage;
 
-    float health;
-    float shield;
-    float speed = 5;
-    float damage;
+    protected bool pathSet = false;
 
-    bool pathSet = false;
+    [SerializeField]protected bool canMove = true;
 
-    [SerializeField]bool canMove = true;
-
-    [SerializeField]int currentPathIndex = 0;
+    [SerializeField]protected int currentPathIndex = 0;
     EnemyController enemyController;
 
 
@@ -49,6 +49,16 @@ public class EnemyBase : MonoBehaviour
     {
         canMove = false;
         await transform.DOJump(PathFinding.instance.path[currentPathIndex].worldPos + new Vector3(0,-2,1), 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
+    }
+
+    public void ResetPath()
+    {
+        pathSet = false;
+    }
+
+    public void UpdatePath()
+    {
+        currentPathIndex = Mathf.Min(currentPathIndex, PathFinding.instance.path.Count-1);
     }
 
     public virtual void Die()

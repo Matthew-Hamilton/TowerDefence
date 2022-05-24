@@ -117,6 +117,11 @@ public class PathFinding : MonoBehaviour
         instance.startPoint = startNode;
     }
 
+    public void SetRandomStart()
+    {
+        startPoint = TileGeneration.instance.MountainNodes[Random.Range(0, TileGeneration.instance.MountainNodes.Count - 1)];
+    }
+
     public static void SetEnd(Node endNode)
     {
         instance.endPoint = endNode;

@@ -358,6 +358,8 @@
 "Assets/Scripts/DrawPath.cs"
 "Assets/Scripts/Enemies/EnemyBase.cs"
 "Assets/Scripts/Enemies/EnemyController.cs"
+"Assets/Scripts/Enemies/MiniSlime.cs"
+"Assets/Scripts/Enemies/Slime.cs"
 "Assets/Scripts/GameController.cs"
 "Assets/Scripts/Heap.cs"
 "Assets/Scripts/Hexagon.cs"

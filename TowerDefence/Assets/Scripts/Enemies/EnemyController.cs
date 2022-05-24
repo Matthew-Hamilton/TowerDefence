@@ -7,6 +7,9 @@ public class EnemyController : MonoBehaviour
 {
     List<EnemyBase> enemies;
     public static EnemyController instance;
+    [SerializeField] GameObject[] enemyTypes;
+
+    bool spawned = true;
 
     // Start is called before the first frame update
     void Start()
@@ -23,22 +26,40 @@ public class EnemyController : MonoBehaviour
         
     }
 
-    async void SpawnWave()
+    public IEnumerator SpawnWave()
     {
         enemies = new List<EnemyBase>();
         for(int i = 0; i < 10; i++)
         {
-            EnemyBase enemy = new EnemyBase();
-            await SpawnEnemy(enemy);
+            spawned = false;
+            StartCoroutine(SpawnEnemy(Random.Range(0, enemyTypes.Length)));
+            yield return new WaitUntil(() => spawned); 
         }
 
     }
 
-    async Task SpawnEnemy(EnemyBase enemy)
+    IEnumerator SpawnEnemy(int enemyTypeIndex)
     {
-        enemies.Add(enemy);
-        Task.Delay(500);
-        await Task.Yield();
+        yield return new WaitForSeconds(0.5f);
+        GameObject enemy = Instantiate(enemyTypes[enemyTypeIndex], PathFinding.instance.startPoint.worldPos + new Vector3(0, -2, 1), Quaternion.identity);
+        enemies.Add(enemy.GetComponent<EnemyBase>());
+        spawned = true;
+    }
+
+    public IEnumerator SpawnSlimes(Vector3 position, int currentPathIndex)
+    {
+        yield return new WaitForSeconds(0.5f);
+        GameObject enemy = Instantiate(enemyTypes[2], position, Quaternion.identity);
+        enemies.Add(enemy.GetComponent<EnemyBase>());
+        spawned = true;
+    }
+
+    public void UpdatePaths()
+    {
+        foreach(EnemyBase enemy in enemies)
+        {
+            UpdatePaths();
+        }
     }
 
 

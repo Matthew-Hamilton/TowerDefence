@@ -13,6 +13,7 @@ public class TileGeneration : MonoBehaviour
     public bool UseRandomSeed = false;
 
     public List<List<Hexagon>> HexConstruction;
+    public List<Node> MountainNodes;
 
     [SerializeField] int numSmoothOperations;
     [SerializeField] int landRatio = 50;
@@ -34,6 +35,7 @@ public class TileGeneration : MonoBehaviour
         Water = Resources.Load<Material>("Water");
         Turret = Resources.Load<Material>("Turret");
 
+        MountainNodes = new List<Node>();
         HexConstruction = new List<List<Hexagon>>();
     }
 
@@ -225,6 +227,8 @@ public class TileGeneration : MonoBehaviour
             foreach (Hexagon hex in hexList)
             {
                 hex.UpdateTile();
+                if (hex.tileType == Hexagon.TileType.Mountain)
+                    MountainNodes.Add(hex.node);
             }
         }
     }
@@ -252,6 +256,10 @@ public class TileGeneration : MonoBehaviour
             Smooth();
             Render();
             GetNumHexes();
+            PathFinding.instance.SetRandomStart();
+            PathFinding.instance.FindPath();
+            StartCoroutine(EnemyController.instance.SpawnWave());
+            //EnemyController.instance.UpdatePaths();
         }
     }
 
