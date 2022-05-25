@@ -50,7 +50,7 @@ public class EnemyBase : MonoBehaviour
     {
         canMove = false;
         targetNode = PathFinding.instance.path[currentPathIndex];
-        await transform.DOJump(targetNode.worldPos + new Vector3(0,-2,1), 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
+        await transform.DOJump(targetNode.worldPos + new Vector3(0,0,1), 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
     }
 
     public void ResetPath()

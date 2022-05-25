@@ -18,6 +18,8 @@ public class EnemyController : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
+
+        List<EnemyBase> enemies = new List<EnemyBase>();
     }
 
     // Update is called once per frame
@@ -41,7 +43,7 @@ public class EnemyController : MonoBehaviour
     IEnumerator SpawnEnemy(int enemyTypeIndex)
     {
         yield return new WaitForSeconds(0.5f);
-        GameObject enemy = Instantiate(enemyTypes[enemyTypeIndex], PathFinding.instance.startPoint.worldPos + new Vector3(0, -2, 1), Quaternion.identity);
+        GameObject enemy = Instantiate(enemyTypes[enemyTypeIndex], PathFinding.instance.startPoint.worldPos + new Vector3(0, 0, 1), Quaternion.identity);
         enemies.Add(enemy.GetComponent<EnemyBase>());
         spawned = true;
     }
@@ -56,6 +58,7 @@ public class EnemyController : MonoBehaviour
 
     public void UpdatePaths()
     {
+        if(enemies != null)
         foreach(EnemyBase enemy in enemies)
         {
             UpdatePaths();

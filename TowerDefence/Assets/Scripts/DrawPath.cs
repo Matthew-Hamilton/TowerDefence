@@ -22,7 +22,7 @@ public class DrawPath : MonoBehaviour
             for(int i = 0; i < path.Count; i++)
             {
                 lineRenderer.enabled = showLine;
-                lineRenderer.SetPosition(i, path[i].worldPos- Vector3.up*2);
+                lineRenderer.SetPosition(i, path[i].worldPos- Vector3.up);
             }
         }
 

@@ -42,9 +42,11 @@ public class PathFinding : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKeyDown(KeyCode.P) && endPoint != null)
+        if(Input.GetKey(KeyCode.P) && endPoint != null)
         {
+            SetRandomStart();
             FindPath();
+            EnemyController.instance.UpdatePaths();
         }
     }
 

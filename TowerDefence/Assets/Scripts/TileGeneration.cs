@@ -175,6 +175,7 @@ public class TileGeneration : MonoBehaviour
                 if(numConnected < 6)
                 {
                     hex.tileType = Hexagon.TileType.Mountain;
+                    Debug.Log("Position When Set Mountain: " + hex.transform.position.ToString());
                 }
                 else
                 {
@@ -222,13 +223,16 @@ public class TileGeneration : MonoBehaviour
 
     public void Render()
     {
+        MountainNodes.Clear();
         foreach (List<Hexagon> hexList in HexConstruction)
         {
             foreach (Hexagon hex in hexList)
             {
                 hex.UpdateTile();
                 if (hex.tileType == Hexagon.TileType.Mountain)
+                {
                     MountainNodes.Add(hex.node);
+                }
             }
         }
     }
@@ -256,12 +260,37 @@ public class TileGeneration : MonoBehaviour
             Smooth();
             Render();
             GetNumHexes();
+
             PathFinding.instance.SetRandomStart();
-            PathFinding.instance.FindPath();
-            StartCoroutine(EnemyController.instance.SpawnWave());
+            /*while (!PathFinding.instance.FindPath())
+                ReRandomise();*/
+            //StartCoroutine(EnemyController.instance.SpawnWave());
             //EnemyController.instance.UpdatePaths();
         }
     }
+
+    bool ReRandomise()
+    {
+        bool pathFound = PathFinding.instance.FindPath();
+        foreach (Node node in MountainNodes)
+        {
+            PathFinding.instance.startPoint = node;
+            if (PathFinding.instance.FindPath())
+            {
+                pathFound = true;
+                return pathFound;
+            }
+        }
+
+
+        Randomise();
+        Smooth();
+        Render();
+        PathFinding.instance.SetRandomStart();
+        pathFound = PathFinding.instance.FindPath();
+        return pathFound;
+    }
+
 
     public static int GetNumHexes()
     {

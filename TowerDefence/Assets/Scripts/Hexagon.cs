@@ -22,7 +22,7 @@ public class Hexagon : MonoBehaviour
 
     void Awake()
     {
-        node = new Node(true, transform.position, this);
+        node = new Node(true, transform.position + Vector3.up, this);
         moveDifficulty = 1;
     }
 
@@ -87,27 +87,21 @@ public class Hexagon : MonoBehaviour
         {
             case 0:
                 otherScript.node.connections = new Node[6];
-                otherScript.node.worldPos = transform.position.xy() + new Vector2(0, 2);
                 return Instantiate(Tile, transform.position + new Vector3(0, 2, 0), Quaternion.identity);
             case 1:
                 otherScript.node.connections = new Node[6];
-                otherScript.node.worldPos = transform.position.xy() + new Vector2(1.732051f, 1);
                 return Instantiate(Tile, transform.position + new Vector3(1.732051f, 1, 0), Quaternion.identity);
             case 2:
                 otherScript.node.connections = new Node[6];
-                otherScript.node.worldPos = transform.position.xy() + new Vector2(1.732051f, -1);
                 return Instantiate(Tile, transform.position + new Vector3(1.732051f, -1, 0), Quaternion.identity);
             case 3:
                 otherScript.node.connections = new Node[6];
-                otherScript.node.worldPos = transform.position.xy() + new Vector2(0, -2);
                 return Instantiate(Tile, transform.position + new Vector3(0, -2, 0), Quaternion.identity);
             case 4:
                 otherScript.node.connections = new Node[6];
-                otherScript.node.worldPos = transform.position.xy() + new Vector2(-1.732051f, -1);
                 return Instantiate(Tile, transform.position + new Vector3(-1.732051f, -1, 0), Quaternion.identity);
             case 5:
                 otherScript.node.connections = new Node[6];
-                otherScript.node.worldPos = transform.position.xy() + new Vector2(-1.732051f, 1);
                 return Instantiate(Tile, transform.position + new Vector3(-1.732051f, 1, 0), Quaternion.identity);
             default:
                 return null;
