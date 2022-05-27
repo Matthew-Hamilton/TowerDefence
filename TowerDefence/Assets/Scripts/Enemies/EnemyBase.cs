@@ -12,6 +12,8 @@ public class EnemyBase : MonoBehaviour
     protected float speed = 5;
     protected float damage;
 
+    public Node spawnPoint;
+    private List<Node> myPath = new List<Node>();
     protected bool pathSet = false;
 
     [SerializeField]protected bool canMove = true;
@@ -23,34 +25,31 @@ public class EnemyBase : MonoBehaviour
 
     private void Start()
     {
+        myPath = new List<Node>();
     }
 
     // Update is called once per frame
     public async virtual void Update()
     {
-        if (PathFinding.instance.path.Count >= 1)
+        if (currentPathIndex != -1 && canMove && pathSet)
         {
-            if (!pathSet)
-            {
-                pathSet = true;
-                currentPathIndex = PathFinding.instance.path.Count - 1;
-            }
-            while (currentPathIndex != -1 && canMove)
-            {
-                canMove = false;
-                await Move();
+            canMove = false;
+            await Move();
 
-                currentPathIndex--;
-                canMove = true;
-            }
+            currentPathIndex--;
+            canMove = true;
         }
+        if(currentPathIndex < 0)
+            Die();
+        
     }
 
     public virtual async Task Move()
     {
         canMove = false;
-        targetNode = PathFinding.instance.path[currentPathIndex];
-        await transform.DOJump(targetNode.worldPos + new Vector3(0,0,1), 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
+
+        targetNode = myPath[currentPathIndex];
+        await transform.DOJump(targetNode.worldPos + new Vector3(0,-1,1), 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
     }
 
     public void ResetPath()
@@ -58,7 +57,7 @@ public class EnemyBase : MonoBehaviour
         pathSet = false;
     }
 
-    public void UpdatePath()
+    /*public void UpdatePath()
     {
         if (PathFinding.instance.path.Contains(targetNode))
         {
@@ -66,6 +65,34 @@ public class EnemyBase : MonoBehaviour
             return;
         }
         currentPathIndex = Mathf.Max(currentPathIndex, PathFinding.instance.path.Count-1);
+    }
+    */
+
+
+
+    public void SetPath(List<Node> newPath)
+    {
+        myPath = newPath;
+        currentPathIndex = myPath.Count-1;
+        pathSet = true;
+    }
+
+    public void UpdatePath()
+    {
+        spawnPoint.attachedHex.GetComponentInChildren<SpriteRenderer>().color = Color.blue;
+        PathFinding.instance.startPoint = spawnPoint;
+        PathFinding.instance.FindPath();
+        SetPath(PathFinding.instance.GetPath());
+    }
+
+    public bool CanPath()
+    {
+
+        myPath[currentPathIndex].attachedHex.gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+        PathFinding.instance.startPoint = myPath[currentPathIndex];
+        spawnPoint = myPath[currentPathIndex];
+        bool canPath = PathFinding.instance.FindPath();
+        return canPath;
     }
 
     public virtual void Die()

@@ -506,7 +506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a13422c4ae80b074eadcbfaa7104428b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: 50
+  size: 10
   Tile: {fileID: 6472046877428488166, guid: 89e903d7f46e07949af8d579722bb123, type: 3}
   Seed: 10.65315
   UseRandomSeed: 1

@@ -42,11 +42,12 @@ public class PathFinding : MonoBehaviour
 
     public void Update()
     {
-        if(Input.GetKey(KeyCode.P) && endPoint != null)
+        if(Input.GetKeyDown(KeyCode.P) && endPoint != null)
         {
             SetRandomStart();
             FindPath();
-            EnemyController.instance.UpdatePaths();
+
+            StartCoroutine(EnemyController.instance.SpawnWave());
         }
     }
 
@@ -55,13 +56,17 @@ public class PathFinding : MonoBehaviour
         path.Clear();
         Debug.Log("Pathing:");
         path.Add(node);
-        while(node.parent != null)
+        while(node.parent != startPoint)
         {
             Debug.Log(node.worldPos);
             path.Add(node.parent);
             node = node.parent;
             //Debug.Log(hex.totalMoveDifficulty);
         }
+        Debug.Log(node.worldPos);
+        path.Add(node.parent);
+        node = node.parent;
+
     }
 
     public bool FindPath()
@@ -143,6 +148,11 @@ public class PathFinding : MonoBehaviour
             return null;
         else
             return instance.endPoint; 
+    }
+
+    public List<Node> GetPath()
+    {
+        return instance.path;
     }
 
     float GetDistance(Node a, Node b)

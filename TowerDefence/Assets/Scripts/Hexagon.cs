@@ -115,10 +115,14 @@ public class Hexagon : MonoBehaviour
             TileType tempTileType = tileType;
             tileType = PlayerController.instance.tileType;
             UpdateTile();
-            if (!PathFinding.instance.FindPath())
+            if(!EnemyController.instance.CheckAllCanPath())
             {
                 tileType = tempTileType;
                 UpdateTile();
+            }
+            else
+            {
+                EnemyController.instance.UpdatePaths();
             }
 
         }

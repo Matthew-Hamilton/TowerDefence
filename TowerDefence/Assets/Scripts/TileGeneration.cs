@@ -262,9 +262,11 @@ public class TileGeneration : MonoBehaviour
             GetNumHexes();
 
             PathFinding.instance.SetRandomStart();
+
+
+
             /*while (!PathFinding.instance.FindPath())
                 ReRandomise();*/
-            //StartCoroutine(EnemyController.instance.SpawnWave());
             //EnemyController.instance.UpdatePaths();
         }
     }
