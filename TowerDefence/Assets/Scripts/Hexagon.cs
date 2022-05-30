@@ -108,6 +108,8 @@ public class Hexagon : MonoBehaviour
         }
     }
 
+
+    //Converts tile to new tile type then checks that all enemies can still path to the goal, otherwise changes back to the original tile
     public void myMouseDown()
     {
         if (PlayerController.instance.selectedTile)

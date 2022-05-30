@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
 using UnityEngine;
 using DG.Tweening;
 
@@ -21,7 +22,7 @@ public class EnemyBase : MonoBehaviour
     [SerializeField]protected int currentPathIndex = 0;
     EnemyController enemyController;
     Node targetNode;
-
+    
 
     private void Start()
     {
@@ -48,7 +49,7 @@ public class EnemyBase : MonoBehaviour
     {
         canMove = false;
 
-        targetNode = myPath[currentPathIndex];
+        targetNode = myPath[Math.Clamp(currentPathIndex, 0, Math.Clamp(myPath.Count-1, 0, int.MaxValue))];
         await transform.DOJump(targetNode.worldPos + new Vector3(0,-1,1), 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
     }
 
@@ -72,15 +73,16 @@ public class EnemyBase : MonoBehaviour
 
     public void SetPath(List<Node> newPath)
     {
-        myPath = newPath;
+        myPath.Clear();
+        myPath.AddRange(newPath);
         currentPathIndex = myPath.Count-1;
         pathSet = true;
     }
 
     public void UpdatePath()
     {
-        spawnPoint.attachedHex.GetComponentInChildren<SpriteRenderer>().color = Color.blue;
-        PathFinding.instance.startPoint = spawnPoint;
+        targetNode.attachedHex.GetComponentInChildren<SpriteRenderer>().color = Color.blue;
+        PathFinding.instance.startPoint = targetNode;
         PathFinding.instance.FindPath();
         SetPath(PathFinding.instance.GetPath());
     }
@@ -88,9 +90,9 @@ public class EnemyBase : MonoBehaviour
     public bool CanPath()
     {
 
-        myPath[currentPathIndex].attachedHex.gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.red;
-        PathFinding.instance.startPoint = myPath[currentPathIndex];
-        spawnPoint = myPath[currentPathIndex];
+        targetNode.attachedHex.gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+        PathFinding.instance.startPoint = targetNode;
+        spawnPoint = targetNode;
         bool canPath = PathFinding.instance.FindPath();
         return canPath;
     }

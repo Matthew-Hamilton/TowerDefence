@@ -33,16 +33,16 @@ public class EnemyController : MonoBehaviour
         if (enemies != null)
         {
             foreach (EnemyBase enemy in enemies)
-                Destroy(enemy.gameObject);
+                 Destroy(enemy.gameObject);
 
             enemies.Clear();
         }
         else
             enemies = new List<EnemyBase>();
-        for(int i = 0; i < 1; i++)
+        for(int i = 0; i < 10; i++)
         {
             spawned = false;
-            StartCoroutine(SpawnEnemy(Random.Range(0, enemyTypes.Length)));
+            StartCoroutine(SpawnEnemy(Random.Range(0, 0/*enemyTypes.Length*/)));
             yield return new WaitUntil(() => spawned);
             enemies[i].SetPath(PathFinding.instance.GetPath());
         }
@@ -54,8 +54,7 @@ public class EnemyController : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
         GameObject enemy = Instantiate(enemyTypes[enemyTypeIndex], PathFinding.instance.startPoint.worldPos + new Vector3(0, -1, 1), Quaternion.identity);
-        EnemyBase enemyBase = new EnemyBase();
-        enemyBase = enemy.GetComponent<EnemyBase>();
+        EnemyBase enemyBase = enemy.GetComponent<EnemyBase>();
         enemyBase.spawnPoint = PathFinding.instance.startPoint;
         enemies.Add(enemyBase);
         spawned = true;
@@ -96,7 +95,8 @@ public class EnemyController : MonoBehaviour
 
 
     public void RemoveEnemy(EnemyBase enemy)
-    {
+    { 
         instance.enemies.Remove(enemy);
+        Debug.Log(instance.enemies.Count);
     }
 }
