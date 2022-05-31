@@ -69,8 +69,21 @@ public class PathFinding : MonoBehaviour
 
     }
 
+    void TraceStartEqualEnd()
+    {
+        path.Clear();
+        path.Add(startPoint);
+    }
+
     public bool FindPath()
     {
+
+        if(startPoint == endPoint)
+        {
+            TraceStartEqualEnd();
+            return true;
+        }
+            
         Heap<Node> openList = new Heap<Node>(TileGeneration.GetNumHexes());
         HashSet<Node> closedList = new HashSet<Node>();
 
