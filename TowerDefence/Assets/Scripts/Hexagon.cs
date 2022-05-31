@@ -140,6 +140,7 @@ public class Hexagon : MonoBehaviour
             PathFinding.instance.endPoint = node; 
         }
         SpriteRenderer spriteRenderer = tileInner.GetComponentInChildren<SpriteRenderer>();
+
         switch(tileType)
         {
             case TileType.Ground:
@@ -160,6 +161,7 @@ public class Hexagon : MonoBehaviour
                 break ;
             case TileType.Turret:
                 spriteRenderer.sprite = Resources.Load<Sprite>("TurretSprite");
+                AddTowerStript();
                 node.walkable = false;
                 break;
             default:
@@ -168,6 +170,15 @@ public class Hexagon : MonoBehaviour
                 node.walkable = true;
                 break;
 
+        }
+    }
+
+    void AddTowerStript()
+    {
+        if(!gameObject.TryGetComponent<TurretBase>(out _))
+        {
+            gameObject.AddComponent<TurretBase>();
+            return;
         }
     }
 

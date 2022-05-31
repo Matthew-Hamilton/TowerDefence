@@ -99,4 +99,9 @@ public class EnemyController : MonoBehaviour
         instance.enemies.Remove(enemy);
         Debug.Log(instance.enemies.Count);
     }
+
+    public List<EnemyBase> GetEnemies()
+    {
+        return instance.enemies;
+    }
 }

@@ -8,10 +8,10 @@ using DG.Tweening;
 public class EnemyBase : MonoBehaviour
 {
     
-    protected float health;
+    [SerializeField] protected float health;
     protected float shield;
     protected float speed = 5;
-    protected float damage;
+    protected float damage = 5;
 
     public Node spawnPoint;
     private List<Node> myPath = new List<Node>();
@@ -23,6 +23,24 @@ public class EnemyBase : MonoBehaviour
     EnemyController enemyController;
     Node targetNode;
     
+
+    public void Damage(float amount, int damageType = 0, bool armourPiercing = false)
+    {
+        switch(damageType)
+        {
+            case 0:
+                shield -= amount;
+                if (shield < 0)
+                    damage -= shield;
+                break;
+        }
+
+        if(health <=0)
+            Die();
+    }
+
+    public int GetCurrentPathIndex()
+    { return currentPathIndex; }
 
     private void Start()
     {
@@ -77,6 +95,11 @@ public class EnemyBase : MonoBehaviour
         myPath.AddRange(newPath);
         currentPathIndex = myPath.Count-1;
         pathSet = true;
+    }
+
+    public void SetCurrentIndexMax()
+    {
+        currentPathIndex = int.MaxValue;
     }
 
     public void UpdatePath()

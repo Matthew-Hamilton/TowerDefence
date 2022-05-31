@@ -366,7 +366,9 @@
 "Assets/Scripts/Node.cs"
 "Assets/Scripts/PathFinding.cs"
 "Assets/Scripts/PlayerController.cs"
+"Assets/Scripts/Projectile.cs"
 "Assets/Scripts/TileGeneration.cs"
+"Assets/Scripts/Turrets/TurretBase.cs"
 -langversion:9.0
 
 /deterministic
