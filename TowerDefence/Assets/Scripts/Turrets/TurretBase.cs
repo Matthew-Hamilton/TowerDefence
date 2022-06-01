@@ -7,7 +7,7 @@ public class TurretBase : MonoBehaviour
     [SerializeField] GameObject projectile;
 
     protected float damage = 10;
-    protected float range = 50;
+    protected float range = 10;
     protected DamageType damageType;
 
 
@@ -19,7 +19,7 @@ public class TurretBase : MonoBehaviour
     IEnumerator Fire(EnemyBase enemy)
     {
         canFire = false;
-        Instantiate(projectile, transform.position, Quaternion.LookRotation((enemy.transform.position -transform.position).normalized));
+        Instantiate(projectile, transform.position + Vector3.forward, Quaternion.LookRotation(((enemy.transform.position - new Vector3(0,0, enemy.transform.position.z)) -(transform.position - new Vector3(0, 0,transform.position.z))).normalized));
 
         yield return new WaitForSeconds(fireDelay);
         canFire = true;
