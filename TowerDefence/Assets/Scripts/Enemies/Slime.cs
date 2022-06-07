@@ -13,10 +13,11 @@ public class Slime : EnemyBase
 
     public override void Die()
     {
+        Debug.Log("Slime Death");
         for(int i = 0; i < 4; i++)
         {
             Vector3 randomOffset = new Vector3(Random.value - 0.5f, Random.value - 0.5f, 0);
-            EnemyController.instance.SpawnSlimes(transform.position + randomOffset, currentPathIndex);
+            EnemyController.instance.SpawnEnemy(2, transform.position + randomOffset, targetNode, currentPathIndex);
         }
         base.Die();
     }

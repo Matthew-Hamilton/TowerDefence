@@ -363,6 +363,8 @@
 "Assets/Scripts/GameController.cs"
 "Assets/Scripts/Heap.cs"
 "Assets/Scripts/Hexagon.cs"
+"Assets/Scripts/Menu Settings/MenuController.cs"
+"Assets/Scripts/Menu Settings/Settings.cs"
 "Assets/Scripts/Node.cs"
 "Assets/Scripts/PathFinding.cs"
 "Assets/Scripts/PlayerController.cs"

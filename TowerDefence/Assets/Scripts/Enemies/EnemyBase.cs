@@ -7,7 +7,7 @@ using DG.Tweening;
 
 public class EnemyBase : MonoBehaviour
 {
-    
+
     [SerializeField] protected float health;
     protected float shield;
     protected float speed = 5;
@@ -17,16 +17,17 @@ public class EnemyBase : MonoBehaviour
     private List<Node> myPath = new List<Node>();
     protected bool pathSet = false;
 
-    [SerializeField]protected bool canMove = true;
+    [SerializeField] protected bool canMove = true;
+    protected Vector3 moveOffset;
 
-    [SerializeField]protected int currentPathIndex = 0;
+    [SerializeField] protected int currentPathIndex = 0;
     EnemyController enemyController;
-    Node targetNode;
-    
+    protected Node targetNode;
+
 
     public void Damage(float amount, int damageType = 0, bool armourPiercing = false)
     {
-        switch(damageType)
+        switch (damageType)
         {
             case 0:
                 shield -= amount;
@@ -35,12 +36,15 @@ public class EnemyBase : MonoBehaviour
                 break;
         }
 
-        if(health <=0)
+        if (health <= 0)
             Die();
     }
 
     public int GetCurrentPathIndex()
     { return currentPathIndex; }
+
+    public void SetCurrentPathIndex(int pathIndex)
+    { currentPathIndex = pathIndex; }
 
     private void Start()
     {
@@ -58,17 +62,17 @@ public class EnemyBase : MonoBehaviour
             currentPathIndex--;
             canMove = true;
         }
-        if(currentPathIndex < 0)
+        if (currentPathIndex < 0)
             Die();
-        
+
     }
 
     public virtual async Task Move()
     {
         canMove = false;
 
-        targetNode = myPath[Math.Clamp(currentPathIndex, 0, Math.Clamp(myPath.Count-1, 0, int.MaxValue))];
-        await transform.DOJump(targetNode.worldPos + new Vector3(0,-1,1), 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
+        targetNode = myPath[Math.Clamp(currentPathIndex, 0, Math.Clamp(myPath.Count - 1, 0, int.MaxValue))];
+        await transform.DOJump(targetNode.worldPos + new Vector3(0, -1, 1) + moveOffset, 0.5f, 8, 10 / speed).SetEase(Ease.Linear).AsyncWaitForCompletion();
     }
 
     public void ResetPath()
@@ -93,7 +97,7 @@ public class EnemyBase : MonoBehaviour
     {
         myPath.Clear();
         myPath.AddRange(newPath);
-        currentPathIndex = myPath.Count-1;
+        currentPathIndex = myPath.Count - 1;
         pathSet = true;
     }
 
@@ -124,10 +128,24 @@ public class EnemyBase : MonoBehaviour
     {
         EnemyController.instance.RemoveEnemy(this);
         Destroy(gameObject);
+        Debug.Log("Died");
     }
 
     public virtual void AttackTower()
     {
+
+    }
+
+    public void SetMoveOffset(Vector3 offset)
+    {
+        moveOffset = offset;
+    }
+
+    public enum EnemyType
+    {
+        Base = 0,
+        Slime = 1,
+        MiniSlime = 2
 
     }
 

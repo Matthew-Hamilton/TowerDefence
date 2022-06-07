@@ -42,7 +42,7 @@ public class EnemyController : MonoBehaviour
         for(int i = 0; i < 10; i++)
         {
             spawned = false;
-            StartCoroutine(SpawnEnemy(Random.Range(0, 0/*enemyTypes.Length*/)));
+            StartCoroutine(SpawnEnemy(Random.Range(0, enemyTypes.Length)));
             yield return new WaitUntil(() => spawned);
             enemies[i].SetPath(PathFinding.instance.GetPath());
         }
@@ -56,17 +56,32 @@ public class EnemyController : MonoBehaviour
         GameObject enemy = Instantiate(enemyTypes[enemyTypeIndex], PathFinding.instance.startPoint.worldPos + new Vector3(0, -1, 1), Quaternion.identity);
         EnemyBase enemyBase = enemy.GetComponent<EnemyBase>();
         enemyBase.spawnPoint = PathFinding.instance.startPoint;
+        enemyBase.SetMoveOffset(RandomOffset());
         enemies.Add(enemyBase);
         spawned = true;
     }
 
-    public IEnumerator SpawnSlimes(Vector3 position, int currentPathIndex)
+    public void SpawnEnemy(int enemyTypeIndex, Vector3 startPos, Node startPoint, int _currentPathIndex)
+    {
+        GameObject enemy = Instantiate(enemyTypes[enemyTypeIndex], startPos, Quaternion.identity);
+        EnemyBase enemyBase = enemy.GetComponent<EnemyBase>();
+        enemyBase.spawnPoint = startPoint;
+        enemyBase.SetMoveOffset(RandomOffset());
+        enemies.Add(enemyBase);
+        spawned = true;
+        PathFinding.instance.startPoint = startPoint;
+        enemyBase.SetPath(PathFinding.instance.GetPath());
+        enemyBase.SetCurrentPathIndex(_currentPathIndex);
+    }
+
+    /*public IEnumerator SpawnSlimes(Vector3 position, int currentPathIndex)
     {
         yield return new WaitForSeconds(0.5f);
         GameObject enemy = Instantiate(enemyTypes[2], position, Quaternion.identity);
         enemies.Add(enemy.GetComponent<EnemyBase>());
         spawned = true;
-    }
+        Debug.Log("Should spawn baby slimes");
+    }*/
 
     public void UpdatePaths()
     {
@@ -98,6 +113,11 @@ public class EnemyController : MonoBehaviour
     { 
         instance.enemies.Remove(enemy);
         Debug.Log(instance.enemies.Count);
+    }
+
+    Vector3 RandomOffset()
+    {
+        return new Vector3(Random.value - 0.5f, Random.value - 0.5f,0);
     }
 
     public List<EnemyBase> GetEnemies()
