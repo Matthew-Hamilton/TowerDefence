@@ -2,6 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public static class IListExtensions
+{
+    /// <summary>
+    /// Shuffles the element order of the specified list.
+    /// </summary>
+    public static void Shuffle<T>(this IList<T> ts)
+    {
+        var count = ts.Count;
+        var last = count - 1;
+        for (var i = 0; i < last; ++i)
+        {
+            var r = UnityEngine.Random.Range(i, count);
+            var tmp = ts[i];
+            ts[i] = ts[r];
+            ts[r] = tmp;
+        }
+    }
+}
+
+
 public class TileGeneration : MonoBehaviour
 {
     public static TileGeneration instance;
@@ -53,7 +74,7 @@ public class TileGeneration : MonoBehaviour
             HexConstruction.Clear();
         }
     }
-    void ConstructMap(int size)
+    public void ConstructMap(int size)
     {
         Debug.Log("Called");
         ClearMap();
@@ -250,31 +271,15 @@ public class TileGeneration : MonoBehaviour
     void Update()
     {
         //Hexagon hex = Tile.GetComponent<Hexagon>();
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            ConstructMap(size);
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Randomise();
-            Smooth();
-            Render();
-            GetNumHexes();
-
-            PathFinding.instance.SetRandomStart();
-
-
-
-            /*while (!PathFinding.instance.FindPath())
-                ReRandomise();*/
-            //EnemyController.instance.UpdatePaths();
-        }
+       
     }
 
     bool ReRandomise()
     {
         bool pathFound = PathFinding.instance.FindPath();
-        foreach (Node node in MountainNodes)
+        List<Node> tempMountainHolder = MountainNodes;
+        tempMountainHolder.Shuffle();
+        foreach (Node node in tempMountainHolder)
         {
             PathFinding.instance.startPoint = node;
             if (PathFinding.instance.FindPath())

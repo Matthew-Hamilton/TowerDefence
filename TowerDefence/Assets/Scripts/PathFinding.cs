@@ -40,17 +40,6 @@ public class PathFinding : MonoBehaviour
         endPoint = null;
     }
 
-    public void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.P) && endPoint != null)
-        {
-            SetRandomStart();
-            FindPath();
-
-            StartCoroutine(EnemyController.instance.SpawnWave());
-        }
-    }
-
     public void TracePath(Node node)
     {
         path.Clear();
@@ -140,6 +129,7 @@ public class PathFinding : MonoBehaviour
 
     public void SetRandomStart()
     {
+
         startPoint = TileGeneration.instance.MountainNodes[Random.Range(0, TileGeneration.instance.MountainNodes.Count - 1)];
     }
 
